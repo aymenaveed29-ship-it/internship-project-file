@@ -1,0 +1,102 @@
+.hero{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:80px 8%;
+    min-height:90vh;
+    background:linear-gradient(
+        to right,
+        #F8FAFC,
+        #EEF5FF
+    );
+}
+
+.hero-left{
+    width:50%;
+}
+
+.badge{
+
+    display:inline-block;
+    background:#DBEAFE;
+    color:#2563EB;
+    padding:10px 20px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:30px;
+}
+
+.hero h1{
+
+    font-size:64px;
+    color:#1F2937;
+    line-height:1.15;
+    margin-bottom:25px;
+}
+
+.hero p{
+
+    font-size:20px;
+    color:#6B7280;
+    line-height:1.8;
+    width:85%;
+}
+
+.hero-buttons{
+
+    margin-top:40px;
+    display:flex;
+    gap:20px;
+}
+
+.shop-btn{
+    background:#2563EB;
+    color:white;
+    border:none;
+    padding:16px 36px;
+    border-radius:30px;
+    font-size:16px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.shop-btn:hover{
+    transform:translateY(-3px);
+    background:#1D4ED8;
+}
+
+.learn-btn{
+
+    background:white;
+    color:#2563EB;
+    border:2px solid #2563EB;
+    padding:16px 36px;
+    border-radius:30px;
+    font-size:16px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.learn-btn:hover{
+
+    background:#2563EB;
+    color:white;
+}
+
+.hero-right{
+    width:45%;
+}
+
+.hero-right img{
+
+    width:100%;
+    border-radius:25px;
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+    transition:.4s;
+}
+
+.hero-right img:hover{
+
+    transform:scale(1.03);
+}
