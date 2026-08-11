@@ -1,5 +1,5 @@
 import "../styles/productCard.css";
-
+import { Link } from "react-router-dom";
 function ProductCard({ product }) {
   return (
     <div className="product-card">
@@ -24,9 +24,12 @@ function ProductCard({ product }) {
 
         <div className="product-buttons">
 
-          <button className="details-btn">
-            View Details
-          </button>
+          <Link
+    to={`/product/${product.id}`}
+    className="details-btn"
+>
+    View Details
+</Link>
 
           <button className="cart-btn">
             Add to Cart
