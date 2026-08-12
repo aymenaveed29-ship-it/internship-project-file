@@ -1,6 +1,11 @@
 import "../styles/productCard.css";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
+import { toast } from "react-toastify";
+
 function ProductCard({ product }) {
+    const { addToCart } = useContext(CartContext);
   return (
     <div className="product-card">
 
@@ -25,15 +30,22 @@ function ProductCard({ product }) {
         <div className="product-buttons">
 
           <Link
-    to={`/product/${product.id}`}
-    className="details-btn"
+  to={`/product/${product.id}`}
+  className="details-btn"
 >
-    View Details
+  View Details
 </Link>
 
-          <button className="cart-btn">
-            Add to Cart
-          </button>
+<button
+  className="cart-btn"
+  onClick={() => {
+    addToCart(product);
+
+    toast.success("Item added to cart successfully!");
+  }}
+>
+  Add To Cart
+</button>
 
         </div>
 

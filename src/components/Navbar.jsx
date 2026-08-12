@@ -1,14 +1,28 @@
 import { Link } from "react-router-dom";
+import { useContext, useMemo } from "react";
+import { CartContext } from "../context/CartContext";
 import "../styles/navbar.css";
 
 function Navbar() {
+  const { cartItems } = useContext(CartContext);
+
+  // Total number of items in cart
+  const totalItems = useMemo(() => {
+    return cartItems.reduce(
+      (total, item) => total + item.quantity,
+      0
+    );
+  }, [cartItems]);
+
   return (
     <header className="navbar">
-
+      {/* Logo */}
       <div className="logo">
-        Dream<span>Nest</span>
+        <span className="dream">Dream</span>
+        <span className="nest">Nest</span>
       </div>
 
+      {/* Navigation Links */}
       <nav>
         <ul className="nav-links">
           <li>
@@ -25,22 +39,23 @@ function Navbar() {
         </ul>
       </nav>
 
+      {/* Right Side */}
       <div className="nav-right">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="search-bar"
-        />
+        <div className="search-box">
+          <input
+            type="text"
+            placeholder="Search..."
+          />
+        </div>
 
         <Link to="/cart" className="cart-btn">
-          🛒 Cart
+          🛒 Cart ({totalItems})
         </Link>
 
         <button className="login-btn">
           Login
         </button>
       </div>
-
     </header>
   );
 }

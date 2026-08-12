@@ -57,12 +57,31 @@
 }
 
 .cart-btn{
-    flex:1;
-    padding:12px;
-    border:none;
+    text-decoration: none;
     background:#2563EB;
     color:white;
-    border-radius:10px;
-    cursor:pointer;
+    padding:10px 20px;
+    border-radius:25px;
     font-weight:600;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    transition:.3s;
+}
+
+.cart-btn:hover{
+    background:#1D4ED8;
+}
+@media(max-width:768px){
+
+.product-buttons{
+    flex-direction:column;
+}
+
+.product-image img{
+    height:200px;
+}
+
 }

@@ -181,3 +181,58 @@
 .logo span{
     color:#F59E0B;
 }
+/* ========================= */
+/* Tablet */
+/* ========================= */
+
+@media (max-width:992px){
+
+.navbar{
+    padding:18px 35px;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.nav-links{
+    gap:18px;
+}
+
+.search-box{
+    width:160px;
+}
+
+}
+
+/* ========================= */
+/* Mobile */
+/* ========================= */
+
+@media (max-width:768px){
+
+.navbar{
+    flex-direction:column;
+    padding:20px;
+}
+
+.nav-links{
+    flex-direction:column;
+    align-items:center;
+    gap:15px;
+}
+
+.nav-right{
+    flex-direction:column;
+    width:100%;
+}
+
+.search-box{
+    width:100%;
+}
+
+.login-btn,
+.cart-btn{
+    width:100%;
+    justify-content:center;
+}
+
+}

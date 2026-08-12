@@ -1,0 +1,119 @@
+/* ==========================
+   Cart Page Container
+========================== */
+
+.cart-page{
+    width:90%;
+    max-width:1200px;
+    margin:40px auto;
+}
+
+.cart-page h1{
+    font-size:38px;
+    color:#1E3A8A;
+    margin-bottom:30px;
+}
+
+/* ==========================
+   Single Cart Item
+========================== */
+
+.cart-item{
+    display:flex;
+    gap:25px;
+    align-items:center;
+    background:#fff;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+/* Product Image */
+
+.cart-item img{
+    width:170px;
+    height:140px;
+    object-fit:cover;
+    border-radius:12px;
+
+}
+
+/* Product Information */
+
+.cart-info{
+    flex:1;
+}
+
+.cart-info h2{
+    margin-bottom:10px;
+}
+
+.cart-info p{
+    font-size:20px;
+    color:#2563EB;
+    margin-bottom:15px;
+
+}
+
+/* ==========================
+   Quantity Buttons
+========================== */
+
+.quantity{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:15px;
+
+}
+
+.quantity button{
+    width:35px;
+    height:35px;
+    border:none;
+    border-radius:8px;
+    background:#2563EB;
+    color:white;
+    cursor:pointer;
+    font-size:18px;
+
+}
+
+/* ==========================
+   Remove Button
+========================== */
+
+.remove-btn{
+    background:#EF4444;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* ==========================
+   Billing Box
+========================== */
+
+.bill{
+
+    margin-top:40px;
+    padding:25px;
+    background:#F8FAFC;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.bill h3{
+    margin:12px 0;
+}
+
+.bill h2{
+    color:#2563EB;
+    margin-top:20px;
+
+}
