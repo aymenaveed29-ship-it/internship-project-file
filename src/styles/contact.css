@@ -34,10 +34,6 @@
 
 }
 
-/* =========================================
-   Contact Form
-========================================= */
-
 .contact-form{
 
     flex:2;
@@ -62,17 +58,13 @@
 /* Blue border when user clicks */
 
 .contact-form input:focus,
-
 .contact-form textarea:focus{
-
     border-color:#2563EB;
 
 }
 
 .contact-form textarea{
-
     resize:none;
-
 }
 
 /* Send Button */
@@ -97,9 +89,6 @@
 
 }
 
-/* =========================================
-   Contact Information
-========================================= */
 
 .contact-info{
 
@@ -125,26 +114,38 @@
 
 }
 
-/* =========================================
-   Map Placeholder
-========================================= */
 
-.map-placeholder{
-
-    margin-top:50px;
-    height:320px;
-    background:#E5E7EB;
-    border-radius:15px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:22px;
-    color:#666;
-
+.location-card {
+  margin-top: 50px;
+  padding: 30px;
+  background: #f8fafc;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
+.location-icon {
+  font-size: 45px;
+}
 
+.location-card h2 {
+  color: #1e3a8a;
+  margin-bottom: 8px;
+}
 
+.location-card p {
+  color: #666;
+  margin: 5px 0;
+}
+
+@media (max-width: 600px) {
+  .location-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
 
 @media(max-width:900px){
 .contact-container{
@@ -155,5 +156,4 @@
     width:100%;
 
 }
-
 }

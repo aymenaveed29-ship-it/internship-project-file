@@ -116,15 +116,10 @@ function Contact() {
           <div className="contact-info">
 
             <h2>Get In Touch</h2>
-
             <p>📍 Lahore, Pakistan</p>
-
             <p>📞 +92 300 1234567</p>
-
             <p>✉ support@dreamnest.com</p>
-
             <p>🕒 Monday - Saturday</p>
-
             <p>9:00 AM - 6:00 PM</p>
 
           </div>
@@ -133,11 +128,15 @@ function Contact() {
 
         {/* Google Map Placeholder */}
 
-        <div className="map-placeholder">
+<div className="location-card">
+  <div className="location-icon">📍</div>
 
-          Google Map Placeholder
-
-        </div>
+  <div>
+    <h2>DreamNest Showroom</h2>
+    <p>Lahore, Punjab, Pakistan</p>
+    <p>Visit us Monday to Saturday, 9:00 AM - 6:00 PM.</p>
+  </div>
+</div>
 
       </section>
 
