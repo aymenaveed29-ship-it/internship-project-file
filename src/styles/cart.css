@@ -117,3 +117,26 @@
     margin-top:20px;
 
 }
+.checkout-btn{
+
+    display:inline-block;
+    margin-top:25px;
+    width:100%;
+    text-align:center;
+    background:#2563EB;
+    color:white;
+    padding:16px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:18px;
+    font-weight:600;
+    transition:.3s;
+
+}
+
+.checkout-btn:hover{
+
+    background:#1D4ED8;
+    transform:translateY(-3px);
+
+}

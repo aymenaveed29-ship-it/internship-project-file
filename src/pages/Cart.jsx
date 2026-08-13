@@ -1,4 +1,5 @@
 import { useContext, useMemo } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { CartContext } from "../context/CartContext";
 import "../styles/cart.css";
@@ -18,6 +19,10 @@ function Cart() {
       0
     );
   }, [cartItems]);
+
+  const shipping = useMemo(() => {
+    return subtotal > 500 ? 0 : 20;
+}, [subtotal]);
 
   const tax = subtotal * 0.05;
   const total = subtotal + tax;
@@ -91,23 +96,33 @@ function Cart() {
 
             <div className="bill">
 
-              <h3>
-                Subtotal :
-                ${subtotal.toFixed(2)}
-              </h3>
+  {/* ===== Bill Summary ===== */}
 
-              <h3>
-                Tax :
-                ${tax.toFixed(2)}
-              </h3>
+  <h3>
+    Subtotal :
+    ${subtotal.toFixed(2)}
+  </h3>
 
-              <h2>
-                Grand Total :
-                ${total.toFixed(2)}
-              </h2>
+  <h3>
+    Tax (5%) :
+    ${tax.toFixed(2)}
+  </h3>
 
-            </div>
+  <h2>
+    Grand Total :
+    ${total.toFixed(2)}
+  </h2>
 
+  {/* ===== Checkout Button ===== */}
+
+  <Link
+    to="/checkout"
+    className="checkout-btn"
+  >
+    Proceed To Checkout →
+  </Link>
+
+</div>
           </>
 
         )}

@@ -5,6 +5,10 @@ import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
 import ProductDetails from "./pages/ProductDetails";
+import CheckoutPage from "./pages/CheckoutPage";
+import NotFound from "./pages/NotFound";
+
+
 function App() {
   return (
     <Routes>
@@ -13,6 +17,8 @@ function App() {
       <Route path="/cart" element={<Cart />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/product/:id" element={<ProductDetails />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
