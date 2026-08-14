@@ -3,6 +3,8 @@
 // useEffect -> simulates loading products and handles cleanup
 // useMemo -> efficiently calculates filtered products
 import { useState, useEffect, useMemo } from "react";
+//provides id
+import { useSearchParams } from "react-router-dom";
 // Components
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
@@ -11,13 +13,13 @@ import "../styles/shop.css";
 // Shop Component
 
 function Shop() {
+const [searchParams, setSearchParams] = useSearchParams();
+const categoryFromUrl = searchParams.get("category") || "All";
+ // Keeps track of selected category
+const [category, setCategory] = useState(categoryFromUrl);
   // Search state
   // Stores whatever the user types
   const [search, setSearch] = useState("");
-  // Category state
-  // Keeps track of selected category
-  const [category, setCategory] = useState("All");
-
   // Products state
   // Initially empty because we simulate loading products from an API
   const [shopProducts, setShopProducts] = useState([]);
@@ -81,17 +83,12 @@ function Shop() {
 
   }, [shopProducts, search, category]);
 
-
-  // ========================================
   // JSX
-  // ========================================
 
   return (
     <>
       {/* Navbar appears at the top */}
       <Navbar />
-
-
       <section className="shop-page">
 
         {/* ==================================
@@ -135,48 +132,44 @@ function Shop() {
               All
             </button>
 
-
-            <button
-              onClick={() => setCategory("Mattress")}
-            >
-              Mattress
-            </button>
-
-
-            <button
-              onClick={() => setCategory("Bed")}
-            >
-              Bed
-            </button>
+             <button
+              onClick={()=> {setCategory("Mattress")
+              setSearchParams ({setCategory:"Mattress"});
+              }}
+              >
+              Mattress
+            </button>
 
 
-            <button
-              onClick={() => setCategory("Pillow")}
-            >
-              Pillow
-            </button>
+            <button
+              onClick={() => { setCategory("Bed")
+              setSearchParams ({setCategory: "Bed"});
+              }}
+            >
+              Bed
+            </button>
+            
+            <button
+              onClick={() => { setCategory("Pillow")
+              setSearchParams ({setCategory:"Pillow"});
+              }}
+            >
+              Pillow
+            </button>
 
-
-            <button
-              onClick={() => setCategory("Bedroom")}
-            >
-              Bedroom
-            </button>
+            <button
+              onClick={() => {setCategory("Bedroom")
+              setSearchParams ({setCategory:"Bedroom"})
+              }}
+            >
+              Bedroom
+            </button>​‌
 
           </div>
-
         </div>
 
-
-        {/* ==================================
-            Product Display
-        ================================== */}
-
         {loading ? (
-
-          // ----------------------------------
           // Show this while products load
-          // ----------------------------------
 
           <div className="loading-message">
             Loading products...
@@ -184,9 +177,7 @@ function Shop() {
 
         ) : (
 
-          // ----------------------------------
           // Show products after loading
-          // ----------------------------------
 
           <div className="shop-grid">
 

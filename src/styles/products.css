@@ -18,10 +18,14 @@
 .product-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:30px;
+    gap:25px;
+    align-items: stretch; 
 }
 
 .product-card{
+    height:100% ;
+    display: flex;
+    flex-direction: column;
     background:white;
     border-radius:20px;
     overflow:hidden;
@@ -31,6 +35,10 @@
 
 .product-card:hover{
     transform:translateY(-8px);
+}
+
+.products-grid .product-info {
+  flex: 1;
 }
 
 .product-card img{

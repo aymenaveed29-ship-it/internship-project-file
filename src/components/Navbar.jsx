@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useContext, useMemo } from "react";
 import { CartContext } from "../context/CartContext";
-import "../styles/navbar.css";
+import "../styles/Navbar.css";
 
 function Navbar() {
   const { cartItems } = useContext(CartContext);

@@ -25,7 +25,7 @@
 }
 
 .dream{
-    color:#1E3A8A;
+    color:#1b3b92;
 }
 
 .nest{
@@ -79,28 +79,34 @@
 /* Search Box */
 
 .search-bar{
+  display:flex;
+  align-items: center;
   width:190px;
   height:40px;
   padding:0 15px;
-  border:4px solid #0a245d;
+  border:10px solid #092c6b;
   border-radius:25px;
   outline:none;
   font-size:14px;
   background:white;
+  transition: 0.3s;
 }
 
 .search-box input{
+    width: 100%;
     border:none;
     outline:none;
     background:transparent;
     margin-left:10px;
     font-size: 14px;
 }
+.search-box:focus-within {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
 
 .search-icon{
     color:#5c6881;
 }
-
 /* Cart */
 
 .cart{

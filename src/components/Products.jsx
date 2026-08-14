@@ -8,7 +8,6 @@ function Products() {
         {
             id:1,
             name:"Dream Comfort Mattress",
-            price:"$599",
             image: mattress1,
             
         },
@@ -16,21 +15,18 @@ function Products() {
         {
             id:2,
             name:"Luxury Hybrid Mattress",
-            price:"$799",
             image:mattress2,
         },
 
         {
             id:3,
             name:"Memory Foam Mattress",
-            price:"$499",
             image:mattress3,
         },
 
         {
             id:4,
             name:"Premium Pillow Set",
-            price:"$99",
             image:mattress4,
         }
 
@@ -61,10 +57,6 @@ function Products() {
                             </div>
 
                             <h4>{product.price}</h4>
-
-                            <button>
-                                Add to Cart
-                            </button>
 
                         </div>
                     ))

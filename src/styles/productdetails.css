@@ -1,19 +1,12 @@
-
 .product-details{
-
     width:90%;
     max-width:1200px;
     margin:60px auto;
     display:flex;
     justify-content:space-between;
     align-items:center;
-
     gap:60px;
 }
-
-/* =========================================
-   Left Side (Product Image)
-========================================= */
 
 .details-image{
     flex:1;

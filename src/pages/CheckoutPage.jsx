@@ -1,23 +1,28 @@
+
 // React Hooks
 // useReducer manages the complete checkout form state
-import { useReducer, useEffect, useMemo } from "react";
-// useContext gives us access to the global cart
-import { useContext } from "react";
-// useNavigate lets us move the user to another route
-// after the order is successfully placed
-import { useNavigate } from "react-router-dom";
+// useEffect handles side effects and cleanup
+// useMemo calculates derived billing values efficiently
+// useState tracks whether the order has been placed
+import { useReducer, useEffect, useMemo, useState, useContext} from "react";
+
+// React Router
+// Link is used for the Continue Shopping button
+import { Link } from "react-router-dom";
 // Cart Context
 import { CartContext } from "../context/CartContext";
+
 // Website components
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+
 // Toast notification
 import { toast } from "react-toastify";
+
 // Page styling
 import "../styles/checkoutpage.css";
 
 // Initial Checkout Form State
-
 const initialState = {
   fullName: "",
   email: "",
@@ -27,120 +32,122 @@ const initialState = {
   postalCode: "",
   paymentMethod: "cod",
 };
-
 // Reducer Function
+
 // The reducer receives the current state and an action.
-// Based on the action type, it returns the updated state.
+// It decides how the checkout form state should change.
 function checkoutReducer(state, action) {
 
   switch (action.type) {
 
-    // Update one input field
+    // Update one form field
     case "UPDATE_FIELD":
       return {
         ...state,
         [action.field]: action.value,
       };
 
-    // Reset the complete form
+    // Reset the whole form
     case "RESET_FORM":
       return initialState;
 
+    // Keep current state for unknown actions
     default:
       return state;
   }
 }
 
-// Checkout Component
+// Checkout Page Component=
 function CheckoutPage() {
-
-  // useReducer manages all checkout form fields
+  // Checkout form state
   const [formData, dispatch] = useReducer(
     checkoutReducer,
     initialState
   );
+  // Tracks whether the order was completed
 
-  // Get cart information and the clearCart function
+
+  const [orderPlaced, setOrderPlaced] = useState(false);
+
+  // Get cart data and cart functions
   const {
     cartItems,
     clearCart,
   } = useContext(CartContext);
-
-  // Used to navigate after order placement
-  const navigate = useNavigate();
-
   // Calculate Subtotal
 
-  // useMemo prevents recalculating the subtotal unless
-  // cartItems actually change.
   const subtotal = useMemo(() => {
 
     return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
+      (total, item) =>
+        total + item.price * item.quantity,
       0
     );
 
   }, [cartItems]);
 
-  // Tax
-
+  // Calculate Tax
   const tax = useMemo(() => {
     return subtotal * 0.05;
   }, [subtotal]);
 
-  // Shipping
-  // Free shipping for orders above $500
+  // Calculate Shipping
   const shipping = useMemo(() => {
     return subtotal >= 500 ? 0 : 20;
   }, [subtotal]);
 
-  // Final Total
+  // Calculate Final Total
   const grandTotal = useMemo(() => {
     return subtotal + tax + shipping;
   }, [subtotal, tax, shipping]);
 
+
+  // ==========================================
   // useEffect + Cleanup
+  // ==========================================
+
   useEffect(() => {
-    // This runs when the Checkout page opens
+
+    // Runs when CheckoutPage mounts
     console.log("Checkout page mounted");
-    // Cleanup runs when the user leaves Checkout
+
+    // Cleanup function runs when leaving CheckoutPage
     return () => {
       console.log("Checkout page unmounted");
-
     };
 
   }, []);
-
+  // ==========================================
   // Handle Input Changes
+  // ==========================================
 
   const handleChange = (e) => {
 
-    // Send an action to the reducer
     dispatch({
+
+      // Tell the reducer which type of update to perform
       type: "UPDATE_FIELD",
 
-      // Which field changed?
+      // Name of the field that changed
       field: e.target.name,
 
-      // What value did the user enter?
+      // New value entered by the user
       value: e.target.value,
     });
 
   };
-
-  // Handle Form Submission
+  // ==========================================
+  // Handle Order Submission
+  // ==========================================
 
   const handleSubmit = (e) => {
 
-    // Prevent normal browser form submission
+    // Prevent the browser from reloading
     e.preventDefault();
-
-    // Don't allow checkout with an empty cart
     if (cartItems.length === 0) {
       toast.error("Your cart is empty.");
       return;
     }
-    // Basic validation
     if (
       !formData.fullName ||
       !formData.email ||
@@ -150,53 +157,52 @@ function CheckoutPage() {
       !formData.postalCode
     ) {
 
-      toast.error("Please complete all required fields.");
+      toast.error(
+        "Please complete all required fields."
+      );
 
       return;
     }
-
-
-    // Show success message
-    toast.success("Order placed successfully!");
-
-    // Clear cart after successful order
     clearCart();
-
-    // Reset checkout form
+    // Tell React to show the success screen
+    setOrderPlaced(true);
     dispatch({
       type: "RESET_FORM",
     });
 
-    // Navigate back to home page
-    setTimeout(() => {
-
-      navigate("/");
-
-    }, 1200);
-
   };
-
-  // Empty Cart Protection
-
-  if (cartItems.length === 0) {
+  // ==========================================
+  // SUCCESS SCREEN
+  // ==========================================
+  if (orderPlaced) {
 
     return (
       <>
         <Navbar />
 
-        <section className="checkout-empty">
+        <section className="order-success">
 
-          <h1>Your cart is empty</h1>
+          {/* Green circular tick */}
+          <div className="success-icon">
+            ✓
+          </div>
+
+          <h1>
+            Order Placed Successfully!
+          </h1>
 
           <p>
-            Add some products before proceeding to checkout.
+            Thank you for shopping with DreamNest.
+            Your order has been received successfully.
           </p>
 
-          <button
-            onClick={() => navigate("/shop")}
+          {/* Return to Home */}
+          <Link
+            to="/"
+            className="continue-shopping-btn"
           >
             Continue Shopping
-          </button>
+          </Link>
 
         </section>
 
@@ -205,24 +211,64 @@ function CheckoutPage() {
     );
   }
 
-  // Checkout UI
+  // This only appears when the user visits
+  // checkout with no items in the cart.
+  if (cartItems.length === 0) {
+
+    return (
+      <>
+        <Navbar />
+
+        <section className="checkout-empty">
+
+          <h1>Your Cart Is Empty</h1>
+
+          <p>
+            Add some products before proceeding
+            to checkout.
+          </p>
+
+          <Link
+            to="/shop"
+            className="continue-shopping-btn"
+          >
+            Continue Shopping
+          </Link>
+
+        </section>
+
+        <Footer />
+      </>
+    );
+  }
+
+
+  // ==========================================
+  // NORMAL CHECKOUT PAGE
+  // ==========================================
+
   return (
     <>
       <Navbar />
 
       <main className="checkout-page">
+
+        {/* Page Heading */}
         <div className="checkout-header">
+
           <h1>Checkout</h1>
+
           <p>
             Complete your details to place your order.
           </p>
+
         </div>
 
 
         <div className="checkout-layout">
 
           {/* ==========================================
-              LEFT SIDE — CUSTOMER FORM
+              LEFT SIDE - CUSTOMER FORM
           ========================================== */}
 
           <form
@@ -230,7 +276,9 @@ function CheckoutPage() {
             onSubmit={handleSubmit}
           >
 
-            <h2>Customer Information</h2>
+            <h2>
+              Customer Information
+            </h2>
 
 
             {/* Full Name */}
@@ -365,7 +413,10 @@ function CheckoutPage() {
                 PAYMENT METHOD
             ========================================== */}
 
-            <h2>Payment Method</h2>
+            <h2>
+              Payment Method
+            </h2>
+
             <div className="payment-options">
 
               <label>
@@ -384,6 +435,7 @@ function CheckoutPage() {
 
               </label>
 
+
               <label>
 
                 <input
@@ -399,6 +451,8 @@ function CheckoutPage() {
                 Credit / Debit Card
 
               </label>
+
+
               <label>
 
                 <input
@@ -410,6 +464,7 @@ function CheckoutPage() {
                   }
                   onChange={handleChange}
                 />
+
                 Bank Transfer
 
               </label>
@@ -418,7 +473,7 @@ function CheckoutPage() {
 
 
             {/* ==========================================
-                PLACE ORDER
+                PLACE ORDER BUTTON
             ========================================== */}
 
             <button
@@ -427,16 +482,20 @@ function CheckoutPage() {
             >
               Place Order
             </button>
+
           </form>
 
 
           {/* ==========================================
-              RIGHT SIDE — ORDER SUMMARY
+              RIGHT SIDE - ORDER SUMMARY
           ========================================== */}
 
           <aside className="order-summary">
 
-            <h2>Order Summary</h2>
+            <h2>
+              Order Summary
+            </h2>
+
 
             {/* Product List */}
 
@@ -456,7 +515,9 @@ function CheckoutPage() {
 
                   <div>
 
-                    <h3>{item.name}</h3>
+                    <h3>
+                      {item.name}
+                    </h3>
 
                     <p>
                       Qty: {item.quantity}
@@ -467,7 +528,8 @@ function CheckoutPage() {
                   <strong>
                     $
                     {(
-                      item.price * item.quantity
+                      item.price *
+                      item.quantity
                     ).toFixed(2)}
                   </strong>
 
@@ -482,16 +544,22 @@ function CheckoutPage() {
 
             <div className="summary-line">
 
-              <span>Subtotal</span>
+              <span>
+                Subtotal
+              </span>
 
               <strong>
                 ${subtotal.toFixed(2)}
               </strong>
 
             </div>
+
+
             <div className="summary-line">
 
-              <span>Tax (5%)</span>
+              <span>
+                Tax (5%)
+              </span>
 
               <strong>
                 ${tax.toFixed(2)}
@@ -499,9 +567,12 @@ function CheckoutPage() {
 
             </div>
 
+
             <div className="summary-line">
 
-              <span>Shipping</span>
+              <span>
+                Shipping
+              </span>
 
               <strong>
                 {shipping === 0
@@ -510,10 +581,18 @@ function CheckoutPage() {
               </strong>
 
             </div>
+
+
             <hr />
+
+
+            {/* Grand Total */}
+
             <div className="summary-total">
 
-              <span>Grand Total</span>
+              <span>
+                Grand Total
+              </span>
 
               <strong>
                 ${grandTotal.toFixed(2)}
