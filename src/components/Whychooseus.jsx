@@ -1,4 +1,4 @@
-import "../styles/whyChooseUs.css";
+import "../styles/whychooseus.css";
 import { FaTruck, FaShieldAlt, FaUndo, FaHeadset } from "react-icons/fa";
 
 function WhyChooseUs() {
