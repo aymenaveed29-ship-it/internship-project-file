@@ -1,223 +1,277 @@
-// React Hooks
-// useState -> manages search, category and loading state
-// useEffect -> simulates loading products and handles cleanup
-// useMemo -> efficiently calculates filtered products
-import { useState, useEffect, useMemo } from "react";
-//provides id
-import { useSearchParams } from "react-router-dom";
-// Components
+import { useState, useEffect, useMemo,} from "react";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
-import products from "../data/products";
+import { useSearchParams } from "react-router-dom";
 import "../styles/shop.css";
-// Shop Component
 
 function Shop() {
-const [searchParams, setSearchParams] = useSearchParams();
-const categoryFromUrl = searchParams.get("category") || "All";
- // Keeps track of selected category
-const [category, setCategory] = useState(categoryFromUrl);
-  // Search state
-  // Stores whatever the user types
-  const [search, setSearch] = useState("");
-  // Products state
-  // Initially empty because we simulate loading products from an API
-  const [shopProducts, setShopProducts] = useState([]);
- 
-  // Loading state
-  // true  -> show "Loading products..."
-  // false -> show product cards
+  // Reads category from the URL.
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  // Search entered by the user.
+  const [search, setSearch] = useState("");
+
+  // Category selected by the user.
+  const [category, setCategory] = useState(
+    searchParams.get("category") || "All"
+  );
+
+  // Products received from the NestJS API.
+  const [shopProducts, setShopProducts] = useState([]);
+
+  // Controls the loading message.
   const [loading, setLoading] = useState(true);
-  // useEffect
+
+  // Stores an API error if the request fails.
+  const [error, setError] = useState("");
+
+  // Fetch products from NestJS
+
   useEffect(() => {
 
-    // Start loading
-    setLoading(true);
-    // ------------------------------------------------
-    // Simulate an API/network request.
-    // In the future, this setTimeout can be replaced
-    // with fetch() when we connect the backend.
-    // ------------------------------------------------
-    const timer = setTimeout(() => {
+    const fetchProducts = async () => {
 
-      // Pretend the server returned the products
-      setShopProducts(products);
+      try {
 
-      // Loading is finished
-      setLoading(false);
+        // Start loading.
+        setLoading(true);
 
-    }, 1000);
-    // CLEANUP FUNCTION
-    // If the user leaves the Shop page before the timer finishes, clear the timer.
+        // Clear previous error.
+        setError("");
 
-    return () => {
-      clearTimeout(timer);
+        // Request products from our NestJS backend.
+        const response = await fetch(
+          "http://localhost:3000/products"
+        );
+
+        // Check whether the server responded successfully.
+        if (!response.ok) {
+          throw new Error(
+            "Failed to load products."
+          );
+        }
+
+        // Convert JSON response into JavaScript data.
+        const data = await response.json();
+
+        // Store API products in React state.
+        setShopProducts(data);
+
+      } catch (error) {
+
+        console.error("Product fetch error:", error);
+
+        setError(
+          "Unable to load products. Please try again."
+        );
+
+      } finally {
+
+        // Runs whether request succeeds or fails.
+        setLoading(false);
+      }
     };
-    // Empty dependency array means:
-    // Run this effect once when Shop mounts.
+
+
+    fetchProducts();
+
   }, []);
-  // useMemo
- 
+
+  // Filter Products
+
   const filteredProducts = useMemo(() => {
 
     return shopProducts.filter((product) => {
 
-      // Check selected category
       const matchesCategory =
         category === "All" ||
-        product.category === category;
+        product.category.toLowerCase() ===
+          category.toLowerCase();
 
-
-      // Check search text
       const matchesSearch =
         product.name
           .toLowerCase()
           .includes(search.toLowerCase());
 
-
-      // Product must satisfy BOTH conditions
-      return matchesCategory && matchesSearch;
-
+      return (
+        matchesCategory &&
+        matchesSearch
+      );
     });
 
-  }, [shopProducts, search, category]);
+  }, [
+    shopProducts,
+    search,
+    category,
+  ]);
 
+  // Change Category
+
+  const handleCategoryChange = (newCategory) => {
+
+    setCategory(newCategory);
+    if (newCategory === "All") {
+
+      setSearchParams({});
+
+    } else {
+
+      setSearchParams({
+        category: newCategory,
+      });
+    }
+  };
   // JSX
 
   return (
     <>
-      {/* Navbar appears at the top */}
       <Navbar />
-      <section className="shop-page">
 
-        {/* ==================================
-            Page Heading
-        ================================== */}
+      <section className="shop-page">
 
         <h1>Our Collection</h1>
 
         <p>
-          Discover premium mattresses and bedroom
-          essentials designed for exceptional comfort.
+          Discover premium mattresses and
+          bedroom essentials designed for
+          exceptional comfort.
         </p>
 
 
-        {/* ==================================
-            Search + Filter Controls
-        ================================== */}
+        {/* Search + Filters */}
 
         <div className="shop-controls">
-
-          {/* Search Input */}
 
           <input
             type="text"
             placeholder="Search products..."
             value={search}
-
-            // Update search state whenever
-            // the user types
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
           />
 
-
-          {/* Category Buttons */}
 
           <div className="filter-buttons">
 
             <button
-              onClick={() => setCategory("All")}
+              onClick={() =>
+                handleCategoryChange("All")
+              }
             >
               All
             </button>
 
-             <button
-              onClick={()=> {setCategory("Mattress")
-              setSearchParams ({setCategory:"Mattress"});
-              }}
-              >
-              Mattress
-            </button>
+            <button
+              onClick={() =>
+                handleCategoryChange("Mattress")
+              }
+            >
+              Mattress
+            </button>
 
+            <button
+              onClick={() =>
+                handleCategoryChange("Bed")
+              }
+            >
+              Bed
+            </button>
 
-            <button
-              onClick={() => { setCategory("Bed")
-              setSearchParams ({setCategory: "Bed"});
-              }}
-            >
-              Bed
-            </button>
-            
-            <button
-              onClick={() => { setCategory("Pillow")
-              setSearchParams ({setCategory:"Pillow"});
-              }}
-            >
-              Pillow
-            </button>
+            <button
+              onClick={() =>
+                handleCategoryChange("Pillow")
+              }
+            >
+              Pillow
+            </button>
 
-            <button
-              onClick={() => {setCategory("Bedroom")
-              setSearchParams ({setCategory:"Bedroom"})
-              }}
-            >
-              Bedroom
-            </button>​‌
+            <button
+              onClick={() =>
+                handleCategoryChange("Bedroom")
+              }
+            >
+              Bedroom
+            </button>
 
           </div>
+
         </div>
 
-        {loading ? (
-          // Show this while products load
+
+        {/* Loading State */}
+
+        {loading && (
 
           <div className="loading-message">
             Loading products...
           </div>
 
-        ) : (
+        )}
 
-          // Show products after loading
 
-          <div className="shop-grid">
+        {/* API Error */}
 
-            {filteredProducts.length > 0 ? (
+        {!loading && error && (
 
-              // Display matching products
-              filteredProducts.map((product) => (
+          <div className="no-products">
 
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
+            <h2>
+              Something went wrong
+            </h2>
 
-              ))
-
-            ) : (
-
-              // Show this when search/filter
-              // returns no products
-              <div className="no-products">
-
-                <h2>No products found</h2>
-
-                <p>
-                  Try another search or category.
-                </p>
-
-              </div>
-
-            )}
+            <p>
+              {error}
+            </p>
 
           </div>
 
         )}
+
+
+        {/* Products */}
+
+        {!loading &&
+          !error && (
+
+            <div className="shop-grid">
+
+              {filteredProducts.length > 0 ? (
+
+                filteredProducts.map(
+                  (product) => (
+
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                    />
+
+                  )
+                )
+
+              ) : (
+
+                <div className="no-products">
+
+                  <h2>
+                    No products found
+                  </h2>
+
+                  <p>
+                    Try another search
+                    or category.
+                  </p>
+
+                </div>
+
+              )}
+
+            </div>
+          )}
 
       </section>
     </>
   );
 }
 
-
-// Export component so App/Router can use it
 export default Shop;

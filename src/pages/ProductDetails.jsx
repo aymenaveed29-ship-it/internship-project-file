@@ -1,38 +1,87 @@
-// React Router hook to get the product ID from the URL
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 
-// Context allows us to use the Add to Cart function
-import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
-// Import product data
-import products from "../data/products";
-
-// Import Navbar
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+
+import productImages from "../data/productImages";
+
 import "../styles/productdetails.css";
 
 function ProductDetails() {
-
-  // Get product id from URL (example: /product/1)
   const { id } = useParams();
 
-  // Find the matching product
-  const product = products.find(
-    (item) => item.id === Number(id)
-  );
-
-  // Get Add to Cart function from Context
   const { addToCart } = useContext(CartContext);
 
-  // If user enters wrong URL
-  if (!product) {
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          `http://localhost:3000/products/${id}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Product not found");
+        }
+
+        const data = await response.json();
+
+        setProduct(data);
+      } catch (error) {
+        console.error("Product fetch error:", error);
+        setError("Product not found.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
     return (
       <>
         <Navbar />
-        <h2 style={{ textAlign: "center", marginTop: "50px" }}>
-          Product Not Found
-        </h2>
+
+        <div className="product-details-message">
+          <h2>Loading product...</h2>
+        </div>
+
+        <Footer />
+      </>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <>
+        <Navbar />
+
+        <div className="product-details-message">
+          <h2>Product Not Found</h2>
+
+          <p>
+            The product you are looking for does not exist.
+          </p>
+
+          <Link
+            to="/shop"
+            className="continue-shopping-btn"
+          >
+            Back to Shop
+          </Link>
+        </div>
+
+        <Footer />
       </>
     );
   }
@@ -43,16 +92,18 @@ function ProductDetails() {
 
       <section className="product-details">
 
-        {/* Product Image */}
         <div className="details-image">
           <img
-            src={product.image}
+            src={productImages[product.image]}
             alt={product.name}
           />
         </div>
 
-        {/* Product Information */}
         <div className="details-info">
+
+          <span className="product-category">
+            {product.category}
+          </span>
 
           <h1>{product.name}</h1>
 
@@ -63,49 +114,44 @@ function ProductDetails() {
           <h2>${product.price}</h2>
 
           <p className="description">
-            Experience premium comfort with our high-quality
-            mattress designed for deep sleep, excellent
-            spinal support, and long-lasting durability.
+            Experience premium comfort with our
+            high-quality product designed for deep
+            sleep, excellent support, and
+            long-lasting durability.
           </p>
 
           <h3>Features</h3>
 
           <ul>
-            <li>✔ Premium Memory Foam</li>
+            <li>✔ Premium Quality</li>
             <li>✔ Breathable Fabric</li>
-            <li>✔ 10-Year Warranty</li>
+            <li>✔ Long-Lasting Durability</li>
             <li>✔ Free Delivery</li>
           </ul>
 
-        
+          <div className="details-buttons">
 
-    //Action Buttons
-<div className="details-buttons">
+            <button
+              className="details-cart-btn"
+              onClick={() => addToCart(product)}
+            >
+              🛒 Add To Cart
+            </button>
 
-  {/* Add product into cart */}
-  <button
-    className="details-cart-btn"
-    onClick={() => addToCart(product)}
-  >
-    🛒 Add To Cart
-  </button>
+            <Link
+              to="/checkout"
+              className="buy-btn"
+            >
+              ⚡ Buy Now
+            </Link>
 
-  {/* Buy Now Button */}
-  <button
-    className="buy-btn"
-    onClick={() =>
-      alert("Checkout page coming soon!")
-    }
-  >
-    ⚡ Buy Now
-  </button>
-
-</div>
+          </div>
 
         </div>
 
       </section>
 
+      <Footer />
     </>
   );
 }

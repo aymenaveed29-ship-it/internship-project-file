@@ -1,8 +1,9 @@
-import "../styles/productCard.css";
+import "../styles/productcard.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { toast } from "react-toastify";
+import productImages from "../data/productImages";
 
 function ProductCard({ product }) {
     const { addToCart } = useContext(CartContext);
@@ -10,7 +11,8 @@ function ProductCard({ product }) {
     <div className="product-card">
 
       <div className="product-image">
-        <img src={product.image} alt={product.name} />
+        <img src={productImages[product.image]} alt={product.name}
+/>
       </div>
 
       <div className="product-info">

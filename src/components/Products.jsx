@@ -9,9 +9,8 @@ function Products() {
             id:1,
             name:"Dream Comfort Mattress",
             image: mattress1,
-            
         },
-
+            
         {
             id:2,
             name:"Luxury Hybrid Mattress",

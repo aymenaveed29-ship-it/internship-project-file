@@ -123,7 +123,7 @@ function Cart() {
   </Link>
 
 </div>
-          </>
+ </>
 
         )}
 

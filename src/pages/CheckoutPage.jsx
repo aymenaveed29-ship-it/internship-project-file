@@ -117,11 +117,9 @@ function CheckoutPage() {
     };
 
   }, []);
-  // ==========================================
   // Handle Input Changes
-  // ==========================================
 
-  const handleChange = (e) => {
+  const handleChange = async(e) => {
 
     dispatch({
 
@@ -135,12 +133,10 @@ function CheckoutPage() {
       value: e.target.value,
     });
 
-  };
-  // ==========================================
-  // Handle Order Submission
-  // ==========================================
+  }
 
-  const handleSubmit = (e) => {
+  // Handle Order Submission
+  const handleSubmit =  async(e) => {
 
     // Prevent the browser from reloading
     e.preventDefault();
@@ -163,17 +159,58 @@ function CheckoutPage() {
 
       return;
     }
-    clearCart();
-    // Tell React to show the success screen
-    setOrderPlaced(true);
-    dispatch({
-      type: "RESET_FORM",
-    });
+    try {
+
+  const orderData = {
+    ...formData,
+
+    total: grandTotal,
+
+    items: cartItems.map((item) => ({
+      productId: item.id,
+      productName: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    })),
+  };
+
+  const response = await fetch(
+    "http://localhost:3000/orders",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(orderData),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to place order");
+  }
+
+  // Only clear cart AFTER backend successfully saves the order
+  clearCart();
+
+  setOrderPlaced(true);
+
+  dispatch({
+    type: "RESET_FORM",
+  });
+
+} catch (error) {
+  console.error("Order submission failed:", error);
+  toast.error(
+    "Unable to place your order. Please try again."
+  );
+
+}
 
   };
-  // ==========================================
+
   // SUCCESS SCREEN
-  // ==========================================
   if (orderPlaced) {
 
     return (
