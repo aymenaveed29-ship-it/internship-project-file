@@ -46,8 +46,9 @@ function Shop() {
 
         // Check whether the server responded successfully.
         if (!response.ok) {
+          const errorText = await response.text();
           throw new Error(
-            "Failed to load products."
+            `Failed to load products (${response.status}): ${errorText || "Unknown server error"}`
           );
         }
 
@@ -62,7 +63,9 @@ function Shop() {
         console.error("Product fetch error:", error);
 
         setError(
-          "Unable to load products. Please try again."
+          error instanceof Error
+            ? error.message
+            : "Unable to load products. Please try again."
         );
 
       } finally {

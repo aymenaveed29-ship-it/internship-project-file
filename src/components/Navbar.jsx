@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useMemo } from "react";
 import { CartContext } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Navbar.css";
 
 function Navbar() {
   const { cartItems } = useContext(CartContext);
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
-  // Total number of items in cart
   const totalItems = useMemo(() => {
     return cartItems.reduce(
       (total, item) => total + item.quantity,
@@ -14,15 +16,22 @@ function Navbar() {
     );
   }, [cartItems]);
 
+  const handleAuthClick = () => {
+    if (isAuthenticated) {
+      logout();
+      return;
+    }
+
+    navigate("/login");
+  };
+
   return (
     <header className="navbar">
-      {/* Logo */}
       <div className="logo">
         <span className="dream">Dream</span>
         <span className="nest">Nest</span>
       </div>
 
-      {/* Navigation Links */}
       <nav>
         <ul className="nav-links">
           <li>
@@ -39,7 +48,6 @@ function Navbar() {
         </ul>
       </nav>
 
-      {/* Right Side */}
       <div className="nav-right">
         <div className="search-box">
           <input
@@ -52,8 +60,8 @@ function Navbar() {
           🛒 Cart ({totalItems})
         </Link>
 
-        <button className="login-btn">
-          Login
+        <button className="login-btn" onClick={handleAuthClick}>
+          {isAuthenticated ? `Hi, ${user?.name || "User"}` : "Login"}
         </button>
       </div>
     </header>

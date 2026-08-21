@@ -8,9 +8,10 @@ import { useReducer, useEffect, useMemo, useState, useContext} from "react";
 
 // React Router
 // Link is used for the Continue Shopping button
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // Cart Context
 import { CartContext } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 // Website components
 import Navbar from "../components/Navbar";
@@ -68,6 +69,8 @@ function CheckoutPage() {
 
 
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
 
   // Get cart data and cart functions
   const {
@@ -107,6 +110,11 @@ function CheckoutPage() {
   // ==========================================
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error("Please login before checking out.");
+      navigate("/login", { replace: true, state: { from: { pathname: "/checkout" } } });
+      return;
+    }
 
     // Runs when CheckoutPage mounts
     console.log("Checkout page mounted");
@@ -116,7 +124,7 @@ function CheckoutPage() {
       console.log("Checkout page unmounted");
     };
 
-  }, []);
+  }, [isAuthenticated, navigate]);
   // Handle Input Changes
 
   const handleChange = async(e) => {
@@ -140,6 +148,12 @@ function CheckoutPage() {
 
     // Prevent the browser from reloading
     e.preventDefault();
+    if (!isAuthenticated) {
+      toast.error("Please login before checking out.");
+      navigate("/login", { state: { from: { pathname: "/checkout" } } });
+      return;
+    }
+
     if (cartItems.length === 0) {
       toast.error("Your cart is empty.");
       return;
@@ -163,7 +177,8 @@ function CheckoutPage() {
 
   const orderData = {
     ...formData,
-
+    customerEmail: user?.email || formData.email,
+    customerName: user?.name || formData.fullName,
     total: grandTotal,
 
     items: cartItems.map((item) => ({
